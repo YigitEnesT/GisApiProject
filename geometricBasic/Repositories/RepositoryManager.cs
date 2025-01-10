@@ -19,5 +19,8 @@ namespace geometricBasic.Repositories
         {
             await _context.SaveChangesAsync();
         }
+
+        // Unit of work için yeni bir interface ve class oluştur buna benzer yapıları oraya ekle.
+
     }
 }
