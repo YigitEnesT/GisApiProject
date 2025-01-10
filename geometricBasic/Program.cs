@@ -18,6 +18,8 @@ builder.Services.AddScoped<IGeoPointService, geometricBasic.Services.GeoPointMan
 // Repository Kayýtlarý
 builder.Services.AddScoped<IRepositoryManager,  RepositoryManager>();
 builder.Services.AddScoped<IGeoPointRepository, GeoPointRepository>();
+// UnitOfWork kaydý
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 
 builder.Services.AddDbContext<AppDbContext>(options =>

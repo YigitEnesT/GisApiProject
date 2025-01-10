@@ -96,27 +96,53 @@ namespace geometricBasic.Controllers
         [HttpDelete("{id:int}")]
         public async Task<Response<GeoPointDto>> DeleteOnePoint(int id)
         {
-            await _manager.GeoPointService.DeleteOnePointAsync(id);
-
-            return new Response<GeoPointDto>
+            try
             {
-                Value = null,
-                StatusCode = 200,
-                Message = $"Point with id : {id} deleted."
-            };
+                await _manager.GeoPointService.DeleteOnePointAsync(id);
+
+                return new Response<GeoPointDto>
+                {
+                    Value = null,
+                    StatusCode = 200,
+                    Message = $"Point with id : {id} deleted."
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Response<GeoPointDto>
+                {
+                    Value = null,
+                    StatusCode = 500,
+                    Message = ex.Message
+                };
+            }
+            
 
         }
 
         [HttpPut("{id:int}")]
         public async Task<Response<GeoPointDto>> UpdateOnePoint(int id, [FromBody] GeoPointDto pointDto)
         {
-            await _manager.GeoPointService.UpdateOnePointAsync(id, pointDto);
-            return new Response<GeoPointDto>
+            try
             {
-                Value = pointDto,
-                StatusCode = 200,
-                Message = "Successfull"
-            };
+                await _manager.GeoPointService.UpdateOnePointAsync(id, pointDto);
+                return new Response<GeoPointDto>
+                {
+                    Value = pointDto,
+                    StatusCode = 200,
+                    Message = "Successfull"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Response<GeoPointDto>
+                {
+                    Value = null,
+                    StatusCode = 500,
+                    Message = ex.Message
+                };
+            }
+            
         }
     }
 }

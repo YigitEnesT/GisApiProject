@@ -10,11 +10,18 @@ namespace geometricBasic.Services
 {
     public class GeoPointManager : IGeoPointService
     {
+        // IRepositoryManager bağlantısı
         private readonly IRepositoryManager _manager;
 
-        public GeoPointManager(IRepositoryManager manager)
+        // UnitOfWork bağlantısı
+        private readonly IUnitOfWork _unitOfWork;
+
+        private const int DefaultSRID = 4326;
+
+        public GeoPointManager(IRepositoryManager manager, IUnitOfWork unitOfWork)
         {
             _manager = manager;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<GeoPointDto> CreateOnePointAsync(GeoPointDto geoPointDto)
@@ -22,11 +29,11 @@ namespace geometricBasic.Services
             var geoPoint = new GeoPoint
             {
                 Name = geoPointDto.Name,
-                Coordinate = new Point(geoPointDto.Longitude, geoPointDto.Latitude) { SRID = 4326 },
+                Coordinate = new Point(geoPointDto.Longitude, geoPointDto.Latitude) { SRID = DefaultSRID },
             };
 
-            _manager.GeoPointRepository.CreateOnePoint(geoPoint);
-            await _manager.SaveAsync();
+            _unitOfWork.GeoPointRepository.CreateOnePoint(geoPoint);
+            await _unitOfWork.SaveAsync();
 
             return new GeoPointDto
             {
@@ -34,22 +41,24 @@ namespace geometricBasic.Services
                 Longitude = geoPoint.Coordinate.X,
                 Latitude = geoPoint.Coordinate.Y
             };
+            
         }
 
         public async Task DeleteOnePointAsync(int id)
         {
-            var point = await _manager.GeoPointRepository.GetOnePointByIdAsync(id);
-            if (point != null)
+            var point = await _unitOfWork.GeoPointRepository.GetOnePointByIdAsync(id);
+            if (point is null)
             {
-                _manager.GeoPointRepository.DeleteOnePoint(point);
-                await _manager.SaveAsync();
+                throw new Exception($"Point with id: {id} could not be deleted.");
             }
-            else throw new Exception($"Point with id: {id} could not be found.");
+            _unitOfWork.GeoPointRepository.DeleteOnePoint(point);
+            await _unitOfWork.SaveAsync();
         }
+          
 
         public async Task<IEnumerable<GeoPointDto>> GetAllPointsAsync()
         {
-            var points = await _manager.GeoPointRepository
+            var points = await _unitOfWork.GeoPointRepository
                 .GetAllPointsAsync();
 
             var pointsDto = points.Select(p => new GeoPointDto
@@ -63,7 +72,7 @@ namespace geometricBasic.Services
 
         public async Task<GeoPointDto> GetOnePointByIdAsync(int id)
         {
-            var point = await _manager.GeoPointRepository.GetOnePointByIdAsync(id);
+            var point = await _unitOfWork.GeoPointRepository.GetOnePointByIdAsync(id);
             if (point != null)
             {
                 var pointDto = new GeoPointDto
@@ -80,19 +89,18 @@ namespace geometricBasic.Services
 
         public async Task<GeoPointDto> UpdateOnePointAsync(int id, GeoPointDto geoPointDto)
         {
-            var point = await _manager.GeoPointRepository.GetOnePointByIdAsync(id);
-            if(point != null)
+            var point = await _unitOfWork.GeoPointRepository.GetOnePointByIdAsync(id);
+            if (point is not null)
             {
                 point.Name = geoPointDto.Name;
-                point.Coordinate = new Point(geoPointDto.Longitude, geoPointDto.Latitude) { SRID = 4326 };
+                point.Coordinate = new Point(geoPointDto.Longitude, geoPointDto.Latitude) { SRID = DefaultSRID };
 
-                _manager.GeoPointRepository.UpdateOnePoint(point);
-                await _manager.SaveAsync();
+                _unitOfWork.GeoPointRepository.UpdateOnePoint(point);
+                await _unitOfWork.SaveAsync();
 
                 return geoPointDto;
             }
             else throw new Exception($"Point with id: {id} could not be found.");
-
         }
     }
 }
