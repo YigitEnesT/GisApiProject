@@ -6,8 +6,8 @@ namespace geometricBasic.Services.Contracts
     {
         public Task<IEnumerable<GeoPointDto>> GetAllPointsAsync();
         public Task<GeoPointDto> GetOnePointByIdAsync(int id);
-        public Task<GeoPointDto> CreateOnePointAsync(GeoPointDto geoPointDto);
-        public Task<GeoPointDto> UpdateOnePointAsync(int id, GeoPointDto geoPointDto);
+        public Task<GeoPointDtoForInsertion> CreateOnePointAsync(GeoPointDtoForInsertion geoPointDto);
+        public Task<GeoPointDtoForInsertion> UpdateOnePointAsync(int id, GeoPointDtoForInsertion geoPointDto);
         public Task DeleteOnePointAsync(int id);
     }
 }

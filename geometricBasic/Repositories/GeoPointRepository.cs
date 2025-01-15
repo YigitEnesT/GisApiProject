@@ -16,6 +16,7 @@ namespace geometricBasic.Repositories
 
         public async Task<IEnumerable<GeoPoint>> GetAllPointsAsync() => 
             await GetAll()
+                .OrderBy(p => p.Id)
                 .ToListAsync();
   
         public async Task<GeoPoint> GetOnePointByIdAsync(int id) =>

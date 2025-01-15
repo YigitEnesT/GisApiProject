@@ -9,7 +9,8 @@ namespace geometricBasic.Repositories.Config
         public void Configure(EntityTypeBuilder<GeoPoint> builder)
         {
             builder.HasKey(p => p.Id);
-            builder.Property(p => p.Name).IsRequired();
+            builder.Property(p => p.Name)
+                .IsRequired();
             builder.Property(p => p.Coordinate)
                 .HasColumnType("geometry(Point, 4326)")
                 .IsRequired();

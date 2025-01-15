@@ -24,7 +24,7 @@ namespace geometricBasic.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<GeoPointDto> CreateOnePointAsync(GeoPointDto geoPointDto)
+        public async Task<GeoPointDtoForInsertion> CreateOnePointAsync(GeoPointDtoForInsertion geoPointDto)
         {
             var geoPoint = new GeoPoint
             {
@@ -35,7 +35,7 @@ namespace geometricBasic.Services
             _unitOfWork.GeoPointRepository.CreateOnePoint(geoPoint);
             await _unitOfWork.SaveAsync();
 
-            return new GeoPointDto
+            return new GeoPointDtoForInsertion
             {
                 Name = geoPoint.Name,
                 Longitude = geoPoint.Coordinate.X,
@@ -63,6 +63,7 @@ namespace geometricBasic.Services
 
             var pointsDto = points.Select(p => new GeoPointDto
                 {
+                    Id = p.Id,
                     Name = p.Name,
                     Longitude = p.Coordinate.X,
                     Latitude = p.Coordinate.Y
@@ -77,6 +78,7 @@ namespace geometricBasic.Services
             {
                 var pointDto = new GeoPointDto
                 {
+                    Id = point.Id,
                     Name = point.Name,
                     Longitude = point.Coordinate.X,
                     Latitude = point.Coordinate.Y,
@@ -87,7 +89,7 @@ namespace geometricBasic.Services
 
         }
 
-        public async Task<GeoPointDto> UpdateOnePointAsync(int id, GeoPointDto geoPointDto)
+        public async Task<GeoPointDtoForInsertion> UpdateOnePointAsync(int id, GeoPointDtoForInsertion geoPointDto)
         {
             var point = await _unitOfWork.GeoPointRepository.GetOnePointByIdAsync(id);
             if (point is not null)

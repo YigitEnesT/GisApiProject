@@ -20,24 +20,24 @@ namespace geometricBasic.Controllers
         }
 
         [HttpPost]
-        public async Task<Response<GeoPointDto>> CreateOnePoint([FromBody] GeoPointDto geoPointDto)
+        public async Task<Response<GeoPointDtoForInsertion>> CreateOnePoint([FromBody] GeoPointDtoForInsertion geoPointDto)
         {
             try
             {
                 var point = await _manager.GeoPointService.CreateOnePointAsync(geoPointDto);
-                return new Response<GeoPointDto>
+                return new Response<GeoPointDtoForInsertion>
                 {
                     Value = point,
-                    StatusCode = 201,
+                    Status = true,
                     Message = "Point Created."
                 };
             }
             catch (Exception ex)
             {
-                return new Response<GeoPointDto>
+                return new Response<GeoPointDtoForInsertion>
                 {
                     Value = geoPointDto,
-                    StatusCode = 500,
+                    Status = false,
                     Message = ex.Message
                 };
             }
@@ -53,7 +53,7 @@ namespace geometricBasic.Controllers
                 return new Response<IEnumerable<GeoPointDto>>
                 {
                     Value = points,
-                    StatusCode = 200,
+                    Status = true,
                     Message = "Successfull"
                 };
             }
@@ -62,7 +62,7 @@ namespace geometricBasic.Controllers
                 return new Response<IEnumerable<GeoPointDto>>
                 {
                     Value = null,
-                    StatusCode = 500,
+                    Status = false,
                     Message = ex.Message
                 };
             }
@@ -78,7 +78,7 @@ namespace geometricBasic.Controllers
                 return new Response<GeoPointDto>
                 {
                     Value = point,
-                    StatusCode = 200,
+                    Status = true,
                     Message = $"Point with id: {id} "
                 };
             }
@@ -87,7 +87,7 @@ namespace geometricBasic.Controllers
                 return new Response<GeoPointDto>
                 {
                     Value = null,
-                    StatusCode = 500,
+                    Status = false,
                     Message = ex.Message
                 };
             }
@@ -103,7 +103,7 @@ namespace geometricBasic.Controllers
                 return new Response<GeoPointDto>
                 {
                     Value = null,
-                    StatusCode = 200,
+                    Status = true,
                     Message = $"Point with id : {id} deleted."
                 };
             }
@@ -112,7 +112,7 @@ namespace geometricBasic.Controllers
                 return new Response<GeoPointDto>
                 {
                     Value = null,
-                    StatusCode = 500,
+                    Status = false,
                     Message = ex.Message
                 };
             }
@@ -121,24 +121,24 @@ namespace geometricBasic.Controllers
         }
 
         [HttpPut("{id:int}")]
-        public async Task<Response<GeoPointDto>> UpdateOnePoint(int id, [FromBody] GeoPointDto pointDto)
+        public async Task<Response<GeoPointDtoForInsertion>> UpdateOnePoint(int id, [FromBody] GeoPointDtoForInsertion pointDto)
         {
             try
             {
                 await _manager.GeoPointService.UpdateOnePointAsync(id, pointDto);
-                return new Response<GeoPointDto>
+                return new Response<GeoPointDtoForInsertion>
                 {
                     Value = pointDto,
-                    StatusCode = 200,
+                    Status = true,
                     Message = "Successfull"
                 };
             }
             catch (Exception ex)
             {
-                return new Response<GeoPointDto>
+                return new Response<GeoPointDtoForInsertion>
                 {
                     Value = null,
-                    StatusCode = 500,
+                    Status = false,
                     Message = ex.Message
                 };
             }

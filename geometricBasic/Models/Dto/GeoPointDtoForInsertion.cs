@@ -2,12 +2,11 @@
 
 namespace geometricBasic.Models.Dto
 {
-    public class GeoPointDto
+    public class GeoPointDtoForInsertion
     {
-        public int Id { get; set; }
         public string Name { get; set; }
         [Required]
-        public double Longitude{ get; set; }
+        public double Longitude { get; set; }
         [Required]
         public double Latitude { get; set; }
     }
